@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+package konzu;
+
+option go_package = "/grpc";
+
+// Servicio Logística que manejará órdenes y el estado de los paquetes
+service LogisticsService {
+  rpc ProcessOrder (OrderRequest) returns (OrderResponse);
+  rpc CheckStatus (StatusRequest) returns (StatusResponse);
+}
+
+// Mensajes usados en las órdenes y seguimiento
+message OrderRequest {
+  string client_name = 1;
+  string item_name = 2;
+  int32 quantity = 3;
+  float value = 4;
+  string destination = 5;
+}
+
+message OrderResponse {
+  string order_id = 1;
+  string message = 2;
+}
+
+message StatusRequest {
+  string order_id = 1;
+}
+
+message StatusResponse {
+  string order_id = 1;
+  string status = 2;
+  string message = 3;
+}
