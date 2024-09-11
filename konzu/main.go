@@ -27,11 +27,11 @@ type PackageInfo struct {
 var packageRegistry = make(map[string]*PackageInfo)
 
 type server struct {
-    pb.UnimplementedLogisticsServiceServer
+    pb.UnimplementedKonzuServiceServer
 }
 
 // Función para procesar la orden
-func (s *server) ProcessOrder(ctx context.Context, req *pb.OrderRequest) (*pb.OrderResponse, error) {
+func (s *server) CreateOrder(ctx context.Context, req *pb.Order) (*pb.OrderResponse, error) {
     log.Printf("Recibida orden del cliente %s para el item %s con cantidad %d", req.ClientName, req.ItemName, req.Quantity)
     
     // Simulamos la creación de un ID de orden único
@@ -58,20 +58,20 @@ func (s *server) ProcessOrder(ctx context.Context, req *pb.OrderRequest) (*pb.Or
 }
 
 // Función para consultar el estado de una orden
-func (s *server) CheckStatus(ctx context.Context, req *pb.StatusRequest) (*pb.StatusResponse, error) {
+func (s *server) CheckOrderStatus(ctx context.Context, req *pb.OrderStatusRequest) (*pb.OrderStatusResponse, error) {
     log.Printf("Consultando estado de la orden %s", req.OrderId)
     
     // Verificar si la orden existe
     packageInfo, exists := packageRegistry[req.OrderId]
     if !exists {
-        return &pb.StatusResponse{
+        return &pb.OrderStatusResponse{
             OrderId: req.OrderId,
             Status:  "No Encontrado",
             Message: "No se encontró la orden con ese código",
         }, nil
     }
 
-    return &pb.StatusResponse{
+    return &pb.OrderStatusResponse{
         OrderId: req.OrderId,
         Status:  packageInfo.Status,
         Message: "Estado del paquete obtenido correctamente",
@@ -86,7 +86,9 @@ func main() {
     }
 
     grpcServer := grpc.NewServer()
-    pb.RegisterLogisticsServiceServer(grpcServer, &server{})
+
+    // Registrar el servicio LogisticsService
+    pb.RegisterKonzuServiceServer(grpcServer, &server{})
 
     log.Println("Servidor de Logística/Konzu iniciado en el puerto 50051")
     if err := grpcServer.Serve(lis); err != nil {

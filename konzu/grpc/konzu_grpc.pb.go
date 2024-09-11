@@ -18,122 +18,122 @@ import (
 // Requires gRPC-Go v1.32.0 or later.
 const _ = grpc.SupportPackageIsVersion7
 
-// LogisticsServiceClient is the client API for LogisticsService service.
+// KonzuServiceClient is the client API for KonzuService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type LogisticsServiceClient interface {
-	ProcessOrder(ctx context.Context, in *OrderRequest, opts ...grpc.CallOption) (*OrderResponse, error)
-	CheckStatus(ctx context.Context, in *StatusRequest, opts ...grpc.CallOption) (*StatusResponse, error)
+type KonzuServiceClient interface {
+	CreateOrder(ctx context.Context, in *Order, opts ...grpc.CallOption) (*OrderResponse, error)
+	CheckOrderStatus(ctx context.Context, in *OrderStatusRequest, opts ...grpc.CallOption) (*OrderStatusResponse, error)
 }
 
-type logisticsServiceClient struct {
+type konzuServiceClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewLogisticsServiceClient(cc grpc.ClientConnInterface) LogisticsServiceClient {
-	return &logisticsServiceClient{cc}
+func NewKonzuServiceClient(cc grpc.ClientConnInterface) KonzuServiceClient {
+	return &konzuServiceClient{cc}
 }
 
-func (c *logisticsServiceClient) ProcessOrder(ctx context.Context, in *OrderRequest, opts ...grpc.CallOption) (*OrderResponse, error) {
+func (c *konzuServiceClient) CreateOrder(ctx context.Context, in *Order, opts ...grpc.CallOption) (*OrderResponse, error) {
 	out := new(OrderResponse)
-	err := c.cc.Invoke(ctx, "/konzu.LogisticsService/ProcessOrder", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/konzu.KonzuService/CreateOrder", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *logisticsServiceClient) CheckStatus(ctx context.Context, in *StatusRequest, opts ...grpc.CallOption) (*StatusResponse, error) {
-	out := new(StatusResponse)
-	err := c.cc.Invoke(ctx, "/konzu.LogisticsService/CheckStatus", in, out, opts...)
+func (c *konzuServiceClient) CheckOrderStatus(ctx context.Context, in *OrderStatusRequest, opts ...grpc.CallOption) (*OrderStatusResponse, error) {
+	out := new(OrderStatusResponse)
+	err := c.cc.Invoke(ctx, "/konzu.KonzuService/CheckOrderStatus", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// LogisticsServiceServer is the server API for LogisticsService service.
-// All implementations must embed UnimplementedLogisticsServiceServer
+// KonzuServiceServer is the server API for KonzuService service.
+// All implementations must embed UnimplementedKonzuServiceServer
 // for forward compatibility
-type LogisticsServiceServer interface {
-	ProcessOrder(context.Context, *OrderRequest) (*OrderResponse, error)
-	CheckStatus(context.Context, *StatusRequest) (*StatusResponse, error)
-	mustEmbedUnimplementedLogisticsServiceServer()
+type KonzuServiceServer interface {
+	CreateOrder(context.Context, *Order) (*OrderResponse, error)
+	CheckOrderStatus(context.Context, *OrderStatusRequest) (*OrderStatusResponse, error)
+	mustEmbedUnimplementedKonzuServiceServer()
 }
 
-// UnimplementedLogisticsServiceServer must be embedded to have forward compatible implementations.
-type UnimplementedLogisticsServiceServer struct {
+// UnimplementedKonzuServiceServer must be embedded to have forward compatible implementations.
+type UnimplementedKonzuServiceServer struct {
 }
 
-func (UnimplementedLogisticsServiceServer) ProcessOrder(context.Context, *OrderRequest) (*OrderResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ProcessOrder not implemented")
+func (UnimplementedKonzuServiceServer) CreateOrder(context.Context, *Order) (*OrderResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateOrder not implemented")
 }
-func (UnimplementedLogisticsServiceServer) CheckStatus(context.Context, *StatusRequest) (*StatusResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method CheckStatus not implemented")
+func (UnimplementedKonzuServiceServer) CheckOrderStatus(context.Context, *OrderStatusRequest) (*OrderStatusResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CheckOrderStatus not implemented")
 }
-func (UnimplementedLogisticsServiceServer) mustEmbedUnimplementedLogisticsServiceServer() {}
+func (UnimplementedKonzuServiceServer) mustEmbedUnimplementedKonzuServiceServer() {}
 
-// UnsafeLogisticsServiceServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to LogisticsServiceServer will
+// UnsafeKonzuServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to KonzuServiceServer will
 // result in compilation errors.
-type UnsafeLogisticsServiceServer interface {
-	mustEmbedUnimplementedLogisticsServiceServer()
+type UnsafeKonzuServiceServer interface {
+	mustEmbedUnimplementedKonzuServiceServer()
 }
 
-func RegisterLogisticsServiceServer(s grpc.ServiceRegistrar, srv LogisticsServiceServer) {
-	s.RegisterService(&LogisticsService_ServiceDesc, srv)
+func RegisterKonzuServiceServer(s grpc.ServiceRegistrar, srv KonzuServiceServer) {
+	s.RegisterService(&KonzuService_ServiceDesc, srv)
 }
 
-func _LogisticsService_ProcessOrder_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(OrderRequest)
+func _KonzuService_CreateOrder_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Order)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(LogisticsServiceServer).ProcessOrder(ctx, in)
+		return srv.(KonzuServiceServer).CreateOrder(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/konzu.LogisticsService/ProcessOrder",
+		FullMethod: "/konzu.KonzuService/CreateOrder",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(LogisticsServiceServer).ProcessOrder(ctx, req.(*OrderRequest))
+		return srv.(KonzuServiceServer).CreateOrder(ctx, req.(*Order))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _LogisticsService_CheckStatus_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(StatusRequest)
+func _KonzuService_CheckOrderStatus_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(OrderStatusRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(LogisticsServiceServer).CheckStatus(ctx, in)
+		return srv.(KonzuServiceServer).CheckOrderStatus(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/konzu.LogisticsService/CheckStatus",
+		FullMethod: "/konzu.KonzuService/CheckOrderStatus",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(LogisticsServiceServer).CheckStatus(ctx, req.(*StatusRequest))
+		return srv.(KonzuServiceServer).CheckOrderStatus(ctx, req.(*OrderStatusRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-// LogisticsService_ServiceDesc is the grpc.ServiceDesc for LogisticsService service.
+// KonzuService_ServiceDesc is the grpc.ServiceDesc for KonzuService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var LogisticsService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "konzu.LogisticsService",
-	HandlerType: (*LogisticsServiceServer)(nil),
+var KonzuService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "konzu.KonzuService",
+	HandlerType: (*KonzuServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "ProcessOrder",
-			Handler:    _LogisticsService_ProcessOrder_Handler,
+			MethodName: "CreateOrder",
+			Handler:    _KonzuService_CreateOrder_Handler,
 		},
 		{
-			MethodName: "CheckStatus",
-			Handler:    _LogisticsService_CheckStatus_Handler,
+			MethodName: "CheckOrderStatus",
+			Handler:    _KonzuService_CheckOrderStatus_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
